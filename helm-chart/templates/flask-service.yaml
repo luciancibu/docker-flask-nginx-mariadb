@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name }}-flask  # name of the flask service (app.py)
+spec:
+  ports:
+    - port: {{ .Values.service.flask.port }} # will listen on this port
+      targetPort: appflask-port  # flask port name -> flaskdeployment .yaml
+      protocol: TCP
+  selector:
+    app: {{ .Values.name }}-flask # any pod that has this label it's going to route the request over there
+  type: {{ .Values.service.type }}  # for internal communication

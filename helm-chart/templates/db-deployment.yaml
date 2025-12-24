@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-mariadb # deployment name
+  labels:
+    app: {{ .Values.name }}-mariadb # label for service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-mariadb  # each pod that will have this selector will be a part of this deployment definition
+  template:   # template of our pod
+    metadata:
+      labels:
+        app: {{ .Values.name }}-mariadb
+    spec:
+      containers:
+      - name: {{ .Values.name }}-mariadb
+        image: "{{ .Values.image.mariadb.repository }}:{{ .Values.image.mariadb.tag }}"
+        volumeMounts:
+        - name: app-db-data
+          mountPath: /var/lib/mysql # we have a folder /var/lib/mysql that will be connected with app-db-data (the pvc volume)
+        ports:
+        - name: appdb-port
+          containerPort: {{ .Values.service.mariadb.port }}
+        env:
+        - name: MARIADB_DATABASE
+          value: {{ .Values.mariadb.database }}
+        - name: MARIADB_USER
+          value: {{ .Values.mariadb.user }}
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-secret
+              key: db-pass
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-secret
+              key: root-db-pass
+      volumes:
+      - name: app-db-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.name }}-pvc
+      initContainers:
+      - name: init-db
+        image: busybox:latest
+        args: ["rm", "-rf", "/var/lib/mysql/lost+found"]
+        volumeMounts:
+        - name: app-db-data # map this volume (pvc) to /var/lib/mysql to delete the content of that folder otherwise the mariadb service will not start
+          mountPath: /var/lib/mysql

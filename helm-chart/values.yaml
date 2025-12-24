@@ -1,0 +1,40 @@
+name: flask-nginx-mariadb
+
+replicaCount:
+  flask: 2
+  nginx: 2
+
+image:
+  flask:
+    repository: luciancibu/flask-counter
+    tag: "1.0"
+    pullPolicy: IfNotPresent
+  nginx:
+    repository: luciancibu/nginx-resume
+    tag: "1.0"
+    pullPolicy: IfNotPresent
+  mariadb:
+    repository: mariadb
+    tag: "10.11"
+
+mariadb:
+  rootPassword: rootpass  # base64: cm9vdHBhc3M=
+  database: cv
+  user: cvuser
+  password: cvpass  # base64: Y3ZwYXNz
+  storage: 3Gi
+  storageClassName: default
+
+ingress:
+  enabled: true
+  className: nginx
+  host: resume.kakosnita.xyz
+
+service:
+  type: ClusterIP
+  nginx:
+    port: 80
+  flask:
+    port: 5000
+  mariadb:
+    port: 3306

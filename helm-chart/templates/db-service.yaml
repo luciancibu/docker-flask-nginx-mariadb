@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name }}-mariadb   # name of the host (app.py)
+spec:
+  ports:
+    - port: {{ .Values.service.mariadb.port }} # will listen on this port
+      targetPort: appdb-port  # db port name -> dbdeployment .yaml
+      protocol: TCP
+  selector:
+    app: {{ .Values.name }}-mariadb # any pod that has this label it's going to route the request over there
+  type: {{ .Values.service.type }}  # for internal communication

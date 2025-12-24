@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-nginx # deployment name
+  labels:
+    app: {{ .Values.name }}-nginx # label for service
+spec:
+  replicas: {{ .Values.replicaCount.nginx }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-nginx  # each pod that will have this selector will be a part of this deployment definition
+  template:   # template of our pod
+    metadata:
+      labels:
+        app: {{ .Values.name }}-nginx
+    spec:
+      containers:
+      - name: {{ .Values.name }}-nginx
+        image: "{{ .Values.image.nginx.repository }}:{{ .Values.image.nginx.tag }}"
+        ports:
+        - name: appnginx-port
+          containerPort: {{ .Values.service.nginx.port }}

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-flask # deployment name
+  labels:
+    app: {{ .Values.name }}-flask # label for service
+spec:
+  replicas: {{ .Values.replicaCount.flask }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-flask  # each pod that will have this selector will be a part of this deployment definition
+  template:   # template of our pod
+    metadata:
+      labels:
+        app: {{ .Values.name }}-flask
+    spec:
+      containers:
+      - name: {{ .Values.name }}-flask
+        image: "{{ .Values.image.flask.repository }}:{{ .Values.image.flask.tag }}"
+        ports:
+        - name: appflask-port
+          containerPort: {{ .Values.service.flask.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.name }}-configmap
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-secret
+              key: db-pass

@@ -16,7 +16,16 @@ spec:
     spec:
       containers:
       - name: appflask
-        image: luciancibu/flask-counter:1.0
+        image: luciancibu/flask-counter:latest
         ports:
         - name: appflask-port
           containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: configfile
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: db-pass               

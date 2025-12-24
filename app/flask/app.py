@@ -1,6 +1,7 @@
 from flask import Flask, request
 import pymysql
 import time
+import os
 
 app = Flask(__name__)
 
@@ -8,17 +9,18 @@ def get_connection():
     for _ in range(20):
         try:
             return pymysql.connect(
-                user="root",
-                password="rootpass",
-                host="mariadb",
-                port=3306,
-                database="cv",
+                user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD"),
+                host=os.getenv("DB_HOST"),
+                port=int(os.getenv("DB_PORT")),
+                database=os.getenv("DB_NAME"),
                 connect_timeout=5
             )
         except pymysql.OperationalError:
             time.sleep(3)
 
     raise Exception("MariaDB is not reachable after multiple retries")
+
 
 def init_db():
     conn = get_connection()

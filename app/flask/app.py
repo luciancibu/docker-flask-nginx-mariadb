@@ -22,6 +22,7 @@ def get_connection():
 
     raise Exception("MariaDB is not reachable after multiple retries")
 
+
 @app.route("/view")
 def view_counter():
     conn = get_connection()

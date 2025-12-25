@@ -1,8 +1,9 @@
+import os
 import sys
 import time
 import requests
 
-URL = "http://localhost:5000/view"
+URL = os.getenv("TARGET_URL", "http://localhost:5000/view")
 
 for i in range(1, 4):
     r = requests.get(URL, timeout=3)

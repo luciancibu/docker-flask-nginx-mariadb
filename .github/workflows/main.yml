@@ -38,15 +38,17 @@ jobs:
       - name: pylint (static analysis report)
         run: |
           pylint app.py --output-format=parseable > pylint-report.txt || true
+          
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@v2
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarCloud Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        with:
+          timeout: '300'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
 
-      # - name: SonarCloud Quality Gate
-      #   uses: SonarSource/sonarcloud-quality-gate-action@v1
-      #   with:
-      #     timeout: '300'
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

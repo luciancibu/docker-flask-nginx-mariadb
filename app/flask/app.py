@@ -1,9 +1,10 @@
-from flask import Flask, request
-import pymysql
-import time
 import os
+import time
+import pymysql
+from flask import Flask, request
 
 app = Flask(__name__)
+
 
 def get_connection():
     for _ in range(20):
@@ -65,6 +66,7 @@ def view_counter():
 
     return str(result[0])
 
-init_db()
-app.run(host="0.0.0.0", port=5000)
 
+if __name__ == "__main__":
+    init_db()
+    app.run(host="0.0.0.0", port=5000)

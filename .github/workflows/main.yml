@@ -1,0 +1,52 @@
+name: Python Quality Gate
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - app/flask/**
+  workflow_dispatch:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: app/flask
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pylint==3.0.3 astroid==3.0.3
+
+      - name: flake8 (style check)
+        run: flake8 .
+
+      - name: pylint (static analysis report)
+        run: |
+          pylint app.py --output-format=parseable > pylint-report.txt || true
+
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@v2
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # - name: SonarCloud Quality Gate
+      #   uses: SonarSource/sonarcloud-quality-gate-action@v1
+      #   with:
+      #     timeout: '300'
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

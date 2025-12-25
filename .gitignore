@@ -1,1 +1,4 @@
 /*.pem
+app/flask/.venv/**
+*.pyc
+*.flake8

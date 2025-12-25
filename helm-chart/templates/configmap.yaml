@@ -7,3 +7,11 @@ data:
   DB_PORT: "{{ .Values.service.mariadb.port }}"
   DB_NAME: {{ .Values.mariadb.database }}
   DB_USER: {{ .Values.mariadb.user }}
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS counter (
+      id INT PRIMARY KEY,
+      views INT
+    );
+
+    INSERT IGNORE INTO counter (id, views)
+    VALUES (1, 0);

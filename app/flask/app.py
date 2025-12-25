@@ -6,6 +6,64 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def get_connection():
     for _ in range(20):
         try:
@@ -25,7 +83,7 @@ def get_connection():
 
 def init_db():
     conn = get_connection()
-    cur = conn.cursor()fwrfwefew
+    cur = conn.cursor()
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS counter (

@@ -25,7 +25,7 @@ def get_connection():
 
 def init_db():
     conn = get_connection()
-    cur = conn.cursor()
+    cur = conn.cursor()fwrfwefew
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS counter (

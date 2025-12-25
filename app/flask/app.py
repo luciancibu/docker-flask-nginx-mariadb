@@ -22,28 +22,6 @@ def get_connection():
 
     raise Exception("MariaDB is not reachable after multiple retries")
 
-
-def init_db():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS counter (
-            id INT PRIMARY KEY,
-            views INT
-        )
-    """)
-
-    cur.execute("""
-        INSERT IGNORE INTO counter (id, views)
-        VALUES (1, 0)
-    """)
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-
 @app.route("/view")
 def view_counter():
     conn = get_connection()
@@ -68,5 +46,4 @@ def view_counter():
 
 
 if __name__ == "__main__":
-    init_db()
     app.run(host="0.0.0.0", port=5000)

@@ -6,13 +6,11 @@ replicaCount:
 
 image:
   flask:
-    repository: luciancibu/flask-counter
-    tag: "1.0"
-    pullPolicy: IfNotPresent
+    repository: ""
+    tag: ""
   nginx:
-    repository: luciancibu/nginx-resume
-    tag: "1.0"
-    pullPolicy: IfNotPresent
+    repository: ""
+    tag: ""
   mariadb:
     repository: mariadb
     tag: "10.11"

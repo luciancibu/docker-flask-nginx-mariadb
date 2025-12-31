@@ -20,6 +20,13 @@ spec:
         ports:
         - name: appflask-port
           containerPort: 5000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
         envFrom:
         - configMapRef:
             name: configfile

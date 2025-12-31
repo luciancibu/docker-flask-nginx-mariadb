@@ -20,6 +20,13 @@ spec:
         ports:
         - name: appflask-port
           containerPort: {{ .Values.service.flask.port }}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.flask.requests.cpu }}
+            memory: {{ .Values.resources.flask.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.flask.limits.cpu }}
+            memory: {{ .Values.resources.flask.limits.memory }}
         envFrom:
         - configMapRef:
             name: {{ .Values.name }}-configmap

@@ -20,3 +20,10 @@ spec:
         ports:
         - name: appnginx-port
           containerPort: {{ .Values.service.nginx.port }}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.nginx.requests.cpu }}
+            memory: {{ .Values.resources.nginx.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.nginx.limits.cpu }}
+            memory: {{ .Values.resources.nginx.limits.memory }}

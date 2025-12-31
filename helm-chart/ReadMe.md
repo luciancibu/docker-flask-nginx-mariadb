@@ -34,6 +34,11 @@ sudo snap install helm --classic
 helm version
 ```
 
+### Install Metrics Server (for HPA)
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
 ## Quick Start
 
 ```bash
@@ -54,12 +59,30 @@ helm uninstall my-app
 | `name` | Application name | `flask-nginx-mariadb` |
 | `replicaCount.flask` | Number of Flask replicas | `2` |
 | `replicaCount.nginx` | Number of Nginx replicas | `2` |
-| `image.flask.repository` | Flask image repository | `luciancibu/flask-counter` |
-| `image.flask.tag` | Flask image tag | `"1.0"` |
-| `image.nginx.repository` | Nginx image repository | `luciancibu/nginx-resume` |
-| `image.nginx.tag` | Nginx image tag | `"1.0"` |
+| `image.flask.repository` | Flask image repository | `""` |
+| `image.flask.tag` | Flask image tag | `""` |
+| `image.nginx.repository` | Nginx image repository | `""` |
+| `image.nginx.tag` | Nginx image tag | `""` |
 | `image.mariadb.repository` | MariaDB image repository | `mariadb` |
 | `image.mariadb.tag` | MariaDB image tag | `"10.11"` |
+| `resources.flask.requests.cpu` | Flask CPU requests | `100m` |
+| `resources.flask.requests.memory` | Flask memory requests | `128Mi` |
+| `resources.flask.limits.cpu` | Flask CPU limits | `300m` |
+| `resources.flask.limits.memory` | Flask memory limits | `256Mi` |
+| `resources.nginx.requests.cpu` | Nginx CPU requests | `50m` |
+| `resources.nginx.requests.memory` | Nginx memory requests | `64Mi` |
+| `resources.nginx.limits.cpu` | Nginx CPU limits | `150m` |
+| `resources.nginx.limits.memory` | Nginx memory limits | `128Mi` |
+| `autoscaling.flask.enabled` | Enable Flask HPA | `true` |
+| `autoscaling.flask.minReplicas` | Flask min replicas | `2` |
+| `autoscaling.flask.maxReplicas` | Flask max replicas | `4` |
+| `autoscaling.flask.targetCPUUtilizationPercentage` | Flask CPU target | `70` |
+| `autoscaling.flask.targetMemoryUtilizationPercentage` | Flask memory target | `80` |
+| `autoscaling.nginx.enabled` | Enable Nginx HPA | `true` |
+| `autoscaling.nginx.minReplicas` | Nginx min replicas | `2` |
+| `autoscaling.nginx.maxReplicas` | Nginx max replicas | `4` |
+| `autoscaling.nginx.targetCPUUtilizationPercentage` | Nginx CPU target | `70` |
+| `autoscaling.nginx.targetMemoryUtilizationPercentage` | Nginx memory target | `80` |
 | `mariadb.rootPassword` | MariaDB root password | `rootpass` |
 | `mariadb.database` | Database name | `cv` |
 | `mariadb.user` | Database user | `cvuser` |
@@ -87,6 +110,11 @@ Or create a custom values file:
 replicaCount:
   flask: 3
   nginx: 3
+autoscaling:
+  flask:
+    maxReplicas: 6
+  nginx:
+    maxReplicas: 6
 ingress:
   host: myapp.example.com
 mariadb:
@@ -96,3 +124,20 @@ mariadb:
 ```bash
 helm install my-app ./helm-chart -f custom-values.yaml
 ```
+
+## Monitoring Autoscaling
+
+```bash
+# Check HPA status
+kubectl get hpa
+
+# View detailed HPA info
+kubectl describe hpa flask-nginx-mariadb-flask-hpa
+kubectl describe hpa flask-nginx-mariadb-nginx-hpa
+```
+
+## Notes
+
+- **Resource limits optimized for t3.small EKS nodes**
+- **HPA requires metrics-server to be installed**
+- **Autoscaling can be disabled by setting `autoscaling.*.enabled: false`**

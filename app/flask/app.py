@@ -46,6 +46,7 @@ def init_db():
 
 @app.route("/view")
 def view_counter():
+    init_db()
     conn = get_connection()
     cur = conn.cursor()
 
@@ -66,6 +67,4 @@ def view_counter():
 
     return str(result[0])
 
-
-init_db()
 app.run(host="0.0.0.0", port=5000)

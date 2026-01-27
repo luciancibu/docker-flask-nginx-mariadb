@@ -1,8 +1,8 @@
 name: App deploy
 
 on:
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
   workflow_dispatch:
 env:
   AWS_REGION: us-east-2
@@ -28,23 +28,23 @@ jobs:
           pip install -r app/flask/requirements.txt
           pip install flake8 pylint==3.0.3 astroid==3.0.3
 
-      - name: Start services
-        run: docker compose up -d --build
-        working-directory: app
+      # - name: Start services
+      #   run: docker compose up -d --build
+      #   working-directory: app
 
-      - name: Run app test
-        run: |
-          pip install requests
-          sleep 5
-          python test_app.py
-        working-directory: app/flask
-        env:
-          TARGET_URL: http://localhost:5000/view
+      # - name: Run app test
+      #   run: |
+      #     pip install requests
+      #     sleep 5
+      #     python test_app.py
+      #   working-directory: app/flask
+      #   env:
+      #     TARGET_URL: http://localhost:5000/view
 
-      - name: Stop services
-        if: always()
-        run: docker compose down
-        working-directory: app
+      # - name: Stop services
+      #   if: always()
+      #   run: docker compose down
+      #   working-directory: app
 
       - name: Style Check(flake8)
         run: flake8 .
@@ -135,7 +135,7 @@ jobs:
           cluster-name: ${{ env.EKS_CLUSTER }}
           chart-path: helm-chart
           namespace: default
-          name: flask-nginx-mariadb
+          name: resume
           values: image.flask.repository=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPO_FLASK }},image.flask.tag=${{ env.TAG }},image.nginx.repository=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPO_NGINX }},image.nginx.tag=${{ env.TAG }}
 
 

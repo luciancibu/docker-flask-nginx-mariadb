@@ -1,4 +1,4 @@
-name: flask-nginx-mariadb
+name: resume
 
 replicaCount:
   flask: 2
@@ -6,12 +6,12 @@ replicaCount:
 
 image:
   flask:
-    repository: ""
-    tag: ""
+    repository: "luciancibu/flask-counter"
+    tag: "2.0"
     pullPolicy: IfNotPresent
   nginx:
-    repository: ""
-    tag: ""
+    repository: "luciancibu/nginx-resume"
+    tag: "2.0"
     pullPolicy: IfNotPresent
   mariadb:
     repository: mariadb
@@ -53,7 +53,7 @@ mariadb:
   user: cvuser
   password: cvpass  # base64: Y3ZwYXNz
   storage: 3Gi
-  storageClassName: default
+  storageClassName: gp2
 
 ingress:
   enabled: true

@@ -40,8 +40,7 @@ spec:
               key: root-db-pass
       volumes:
       - name: app-db-data
-        persistentVolumeClaim:
-          claimName: {{ .Values.name }}-pvc
+        emptyDir: {}
       initContainers:
       - name: init-db
         image: busybox:latest
